@@ -1,0 +1,57 @@
+name: HDL CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog verilator python3-pip jq
+          pip3 install requests
+
+      - name: Run linting
+        run: |
+          # Install Verible
+          wget https://github.com/chipsalliance/verible/releases/download/v0.0-3425-g7e064c97/verible-v0.0-3425-g7e064c97-Ubuntu-20.04.tar.gz
+          tar xzf verible-v0.0-3425-g7e064c97-Ubuntu-20.04.tar.gz
+          sudo cp verible-v0.0-3425-g7e064c97/bin/* /usr/local/bin/
+          
+          # Run Verible lint
+          find . -name "*.v" -o -name "*.sv" | xargs verible-verilog-lint
+
+      - name: Run simulation
+        run: |
+          cd examples/counter
+          iverilog -o testbench.vvp counter.v counter_tb.v
+          vvp testbench.vvp
+
+      - name: Upload waveform
+        if: success()
+        run: |
+          cd examples/counter
+          # Upload VCD to ts-verilog-simulator
+          WAVEFORM_ID=$(curl -s -F "file=@waveform.vcd" http://localhost:3000/api/v1/waveform/upload | jq -r '.waveform_id')
+          echo "WAVEFORM_ID=$WAVEFORM_ID" >> $GITHUB_ENV
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const waveformUrl = `https://ts-verilog-simulator-frontend.vercel.app/waveform/${process.env.WAVEFORM_ID}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Simulation completed successfully!\n\nView waveform: ${waveformUrl}`
+            }); 

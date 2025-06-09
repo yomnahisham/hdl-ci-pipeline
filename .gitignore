@@ -1,0 +1,18 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Verilog simulation files
+*.vvp
+*.vcd
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build directories
+build/
+dist/ 
