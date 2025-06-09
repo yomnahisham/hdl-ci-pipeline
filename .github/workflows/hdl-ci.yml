@@ -16,18 +16,49 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y iverilog verilator python3-pip jq
+          sudo apt-get install -y iverilog verilator python3-pip jq wget
           pip3 install requests
 
       - name: Run linting
         run: |
           # Install Verible
-          wget https://github.com/chipsalliance/verible/releases/download/v0.0-3425-g7e064c97/verible-v0.0-3425-g7e064c97-Ubuntu-20.04.tar.gz
-          tar xzf verible-v0.0-3425-g7e064c97-Ubuntu-20.04.tar.gz
-          sudo cp verible-v0.0-3425-g7e064c97/bin/* /usr/local/bin/
+          set -e  # Exit on any error
           
-          # Run Verible lint
-          find . -name "*.v" -o -name "*.sv" | xargs verible-verilog-lint
+          echo "Fetching latest Verible release..."
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/chipsalliance/verible/releases/latest | grep "tag_name" | cut -d'"' -f4)
+          if [ -z "$LATEST_RELEASE" ]; then
+            echo "Error: Could not fetch latest release version"
+            exit 1
+          fi
+          
+          echo "Downloading Verible ${LATEST_RELEASE}..."
+          wget -q https://github.com/chipsalliance/verible/releases/download/${LATEST_RELEASE}/verible-${LATEST_RELEASE}-linux-static-x86_64.tar.gz
+          if [ ! -f "verible-${LATEST_RELEASE}-linux-static-x86_64.tar.gz" ]; then
+            echo "Error: Failed to download Verible"
+            exit 1
+          fi
+          
+          echo "Extracting Verible..."
+          tar xzf verible-${LATEST_RELEASE}-linux-static-x86_64.tar.gz
+          if [ ! -d "verible-${LATEST_RELEASE}" ]; then
+            echo "Error: Failed to extract Verible"
+            exit 1
+          fi
+          
+          echo "Installing Verible..."
+          sudo cp verible-${LATEST_RELEASE}/bin/* /usr/local/bin/
+          
+          echo "Cleaning up..."
+          rm -rf verible-${LATEST_RELEASE} verible-${LATEST_RELEASE}-linux-static-x86_64.tar.gz
+          
+          echo "Running Verible lint..."
+          # Find all Verilog files and run linting
+          VERILOG_FILES=$(find . -name "*.v" -o -name "*.sv" 2>/dev/null || true)
+          if [ -z "$VERILOG_FILES" ]; then
+            echo "No Verilog files found to lint"
+            exit 0
+          fi
+          echo "$VERILOG_FILES" | xargs verible-verilog-lint
 
       - name: Run simulation
         run: |
