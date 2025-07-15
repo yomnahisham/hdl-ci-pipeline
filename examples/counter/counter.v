@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module counter(
     input wire clk,
     input wire rst_n,
@@ -11,4 +13,4 @@ module counter(
             count <= count + 1'b1;
     end
 
-endmodule 
+endmodule

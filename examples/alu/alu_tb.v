@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module alu_tb;
     // Parameters
     parameter WIDTH = 4;
@@ -38,12 +40,12 @@ module alu_tb;
         // Enable waveform dumping
         $dumpfile("waveform.vcd");
         $dumpvars(0, alu_tb);
-        
+
         // Initialize
         a = 0;
         b = 0;
         op = 0;
-        
+
         // Test Addition
         $display("\nTesting Addition:");
         op = ADD;
@@ -52,7 +54,7 @@ module alu_tb;
         #DELAY;
         $display("5 + 3 = %d (Expected: 8)", result);
         $display("Carry: %b, Zero: %b", carry, zero);
-        
+
         // Test Subtraction
         $display("\nTesting Subtraction:");
         op = SUB;
@@ -61,7 +63,7 @@ module alu_tb;
         #DELAY;
         $display("8 - 3 = %d (Expected: 5)", result);
         $display("Carry: %b, Zero: %b", carry, zero);
-        
+
         // Test AND
         $display("\nTesting AND:");
         op = AND;
@@ -69,7 +71,7 @@ module alu_tb;
         b = 4'b1100;  // 12
         #DELAY;
         $display("1010 & 1100 = %b (Expected: 1000)", result);
-        
+
         // Test OR
         $display("\nTesting OR:");
         op = OR;
@@ -77,7 +79,7 @@ module alu_tb;
         b = 4'b1100;  // 12
         #DELAY;
         $display("1010 | 1100 = %b (Expected: 1110)", result);
-        
+
         // Test XOR
         $display("\nTesting XOR:");
         op = XOR;
@@ -85,14 +87,14 @@ module alu_tb;
         b = 4'b1100;  // 12
         #DELAY;
         $display("1010 ^ 1100 = %b (Expected: 0110)", result);
-        
+
         // Test NOT
         $display("\nTesting NOT:");
         op = NOT;
         a = 4'b1010;  // 10
         #DELAY;
         $display("~1010 = %b (Expected: 0101)", result);
-        
+
         // Test Shift Left
         $display("\nTesting Shift Left:");
         op = SHL;
@@ -100,7 +102,7 @@ module alu_tb;
         #DELAY;
         $display("1010 << 1 = %b (Expected: 0100)", result);
         $display("Carry: %b", carry);
-        
+
         // Test Shift Right
         $display("\nTesting Shift Right:");
         op = SHR;
@@ -108,7 +110,7 @@ module alu_tb;
         #DELAY;
         $display("1010 >> 1 = %b (Expected: 0101)", result);
         $display("Carry: %b", carry);
-        
+
         // Test Zero Flag
         $display("\nTesting Zero Flag:");
         op = ADD;
@@ -116,7 +118,7 @@ module alu_tb;
         b = 4'b0000;  // 0
         #DELAY;
         $display("0 + 0 = %d, Zero: %b (Expected: 0, 1)", result, zero);
-        
+
         // Test Carry Flag
         $display("\nTesting Carry Flag:");
         op = ADD;
@@ -124,13 +126,13 @@ module alu_tb;
         b = 4'b0001;  // 1
         #DELAY;
         $display("15 + 1 = %d, Carry: %b (Expected: 0, 1)", result, carry);
-        
+
         // Test Edge Cases
         $display("\nTesting Edge Cases:");
         op = 3'bxxx;  // Invalid operation
         #DELAY;
         $display("Invalid operation result: %b, Zero: %b", result, zero);
-        
+
         $display("\nAll tests completed!");
         #DELAY;
         $finish;
@@ -142,4 +144,4 @@ module alu_tb;
                  $time, op, a, b, result, zero, carry);
     end
 
-endmodule 
+endmodule
