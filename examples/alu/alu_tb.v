@@ -2,8 +2,8 @@
 
 module alu_tb;
     // Parameters
-    parameter WIDTH = 4;
-    parameter DELAY = 10;
+    parameter integer WIDTH = 4;
+    parameter integer DELAY = 10;
 
     // Testbench signals
     reg [WIDTH-1:0] a;
@@ -14,14 +14,14 @@ module alu_tb;
     wire carry;
 
     // Operation codes
-    localparam ADD  = 3'b000;
-    localparam SUB  = 3'b001;
-    localparam AND  = 3'b010;
-    localparam OR   = 3'b011;
-    localparam XOR  = 3'b100;
-    localparam NOT  = 3'b101;
-    localparam SHL  = 3'b110;
-    localparam SHR  = 3'b111;
+    localparam logic [2:0] ADD  = 3'b000;
+    localparam logic [2:0] SUB  = 3'b001;
+    localparam logic [2:0] AND  = 3'b010;
+    localparam logic [2:0] OR   = 3'b011;
+    localparam logic [2:0] XOR  = 3'b100;
+    localparam logic [2:0] NOT  = 3'b101;
+    localparam logic [2:0] SHL  = 3'b110;
+    localparam logic [2:0] SHR  = 3'b111;
 
     // Instantiate ALU
     alu #(
