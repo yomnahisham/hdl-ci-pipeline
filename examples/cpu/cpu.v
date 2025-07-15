@@ -1,5 +1,7 @@
+`timescale 1ns/1ps
+
 module cpu #(
-    parameter WIDTH = 4
+    parameter integer WIDTH = 4
 )(
     input wire clk,
     input wire rst,
@@ -26,12 +28,12 @@ module cpu #(
 
     // State machine
     reg [2:0] state;
-    localparam IDLE = 3'b000;
-    localparam ADD = 3'b001;
-    localparam STORE = 3'b010;
-    localparam SUB = 3'b011;
-    localparam AND = 3'b100;
-    localparam DONE = 3'b101;
+    localparam logic [2:0] IDLE = 3'b000;
+    localparam logic [2:0] ADD = 3'b001;
+    localparam logic [2:0] STORE = 3'b010;
+    localparam logic [2:0] SUB = 3'b011;
+    localparam logic [2:0] AND = 3'b100;
+    localparam logic [2:0] DONE = 3'b101;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin

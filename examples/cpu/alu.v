@@ -1,5 +1,7 @@
+`timescale 1ns/1ps
+
 module alu #(
-    parameter WIDTH = 4
+    parameter integer WIDTH = 4
 )(
     input wire [WIDTH-1:0] a,      // First operand
     input wire [WIDTH-1:0] b,      // Second operand
@@ -10,14 +12,14 @@ module alu #(
 );
 
     // Operation codes
-    localparam ADD  = 3'b000;  // Addition
-    localparam SUB  = 3'b001;  // Subtraction
-    localparam AND  = 3'b010;  // Bitwise AND
-    localparam OR   = 3'b011;  // Bitwise OR
-    localparam XOR  = 3'b100;  // Bitwise XOR
-    localparam NOT  = 3'b101;  // Bitwise NOT
-    localparam SHL  = 3'b110;  // Shift left
-    localparam SHR  = 3'b111;  // Shift right
+    localparam logic [2:0] ADD  = 3'b000;  // Addition
+    localparam logic [2:0] SUB  = 3'b001;  // Subtraction
+    localparam logic [2:0] AND  = 3'b010;  // Bitwise AND
+    localparam logic [2:0] OR   = 3'b011;  // Bitwise OR
+    localparam logic [2:0] XOR  = 3'b100;  // Bitwise XOR
+    localparam logic [2:0] NOT  = 3'b101;  // Bitwise NOT
+    localparam logic [2:0] SHL  = 3'b110;  // Shift left
+    localparam logic [2:0] SHR  = 3'b111;  // Shift right
 
     // Temporary signals for arithmetic operations
     wire [WIDTH:0] add_result;
@@ -28,7 +30,7 @@ module alu #(
     assign sub_result = a - b;
 
     // Main ALU logic
-    always @(*) begin
+    always_comb begin
         case (op)
             ADD: begin
                 result = add_result[WIDTH-1:0];
