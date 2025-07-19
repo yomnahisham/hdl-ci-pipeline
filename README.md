@@ -1,6 +1,6 @@
 # HDL CI/CD Pipeline
 
-A GitHub Actions workflow for Hardware Description Language (HDL) projects that provides automated linting, simulation, and waveform visualization. This project integrates with [ts-verilog-simulator](https://github.com/yomnahisham/ts-verilog-simulator) for online waveform viewing.
+A GitHub Actions workflow for Hardware Description Language (HDL) projects that provides automated linting, simulation, and waveform visualization. This project integrates with [Vivado-Make](https://github.com/yomnahisham/ts-verilog-simulator) for online waveform viewing.
 
 ## Project Structure
 
